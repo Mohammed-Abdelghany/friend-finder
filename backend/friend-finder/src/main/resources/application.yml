@@ -1,0 +1,46 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: friend-finder
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/orclpdb
+    driver:-class-name: oracle.jdbc.OracleDriver
+    username: hr
+    password: hr
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+#    data:
+#      redis:
+#        host: localhost
+#        port: 6379
+#        password:
+#        jedis:
+#          pool:
+#            max-active: 10
+#            max-idle: 5
+#            min-idle: 1
+#            max-wait: -1ms
+
+jwt:
+  secret_Key: kld##wsadklwk%efe%#3#%)!@_!@#!@()$()!@#$!@#%@#@!#@!#
+  duration: 24h  # 1 day in milliseconds
+#springdoc:
+#  api-docs:
+#    path: /v3/api-docs
+#    enabled: true
+#
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    enabled: true
+#    operationsSorter: method
+#    tagsSorter: alpha
+#    try-it-out-enabled: true
+
+
