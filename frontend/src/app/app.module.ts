@@ -21,20 +21,29 @@ import { TimeLineProfileComponent } from './componants/time-lines/time-line-prof
 import { TimeLineDetailesComponent } from './componants/time-lines/time-line-detailes/time-line-detailes.component';
 import {RouterModule, Routes} from '@angular/router';
 import { LoginComponent } from './componants/login/login.component';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {FormsModule} from '@angular/forms';
+import {AuthGuard} from '../services/guard/auth.guard';
+import {AuthInterceptor} from '../services/interceptor/auth.interceptor';
+import {GuestGuard} from '../services/guard/guest.guard';
+import {CommonModule, NgIf} from '@angular/common';
+import { FeaturesComponent } from './componants/login/features/features.component';
+
 
 // http://localhost:4200
 
 const routes: Routes = [
-  {path: 'sigin-up', component: SignUpComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'mainpage', component: MainPageComponent},
+  {path: 'sigin-up', component: SignUpComponent, canActivate: [GuestGuard]},
+  {path: 'login', component: LoginComponent, canActivate: [GuestGuard]},
+  {path: 'features', component: FeaturesComponent, canActivate: [GuestGuard]},
+  {path: 'mainpage', component: MainPageComponent, canActivate: [AuthGuard]},
   {path: 'contact', component: ContactComponent},
-  {path: 'timeline', component: TimeLineComponent},
-  {path: 'timeline-about', component: TimeAboutComponent},
-  {path: 'timeline-friends', component: TimeFriendsComponent},
-  {path: 'timeline-album', component: TimeAlbumComponent},
-  {path: '', component: MainPageComponent},
-  {path: '**', component: MainPageComponent},
+  {path: 'timeline', component: TimeLineComponent, canActivate: [AuthGuard]},
+  {path: 'timeline-about', component: TimeAboutComponent, canActivate: [AuthGuard]},
+  {path: 'timeline-friends', component: TimeFriendsComponent, canActivate: [AuthGuard]},
+  {path: 'timeline-album', component: TimeAlbumComponent, canActivate: [AuthGuard]},
+  {path: '', component: MainPageComponent, canActivate: [AuthGuard]},
+  {path: '**', component: MainPageComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
@@ -59,12 +68,19 @@ const routes: Routes = [
     TimeLineProfileComponent,
     TimeLineDetailesComponent,
     LoginComponent,
+    FeaturesComponent,
+
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    HttpClientModule,
+    FormsModule,
+    CommonModule,
   ],
-  providers: [],
+  providers: [  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

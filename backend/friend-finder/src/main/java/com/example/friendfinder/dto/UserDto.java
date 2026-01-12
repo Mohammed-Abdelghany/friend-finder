@@ -1,6 +1,5 @@
 package com.example.friendfinder.dto;
 
-import com.example.friendfinder.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

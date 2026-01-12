@@ -74,7 +74,7 @@ public class AuthFilter extends OncePerRequestFilter {
         // قائمة المسارات التي لا تحتاج فلترة
         boolean shouldSkip = path.startsWith("/auth/") ||
                 path.equals("/auth") ||
-                path.startsWith("/public/") ||
+                path.startsWith("/assets/") ||
                 path.startsWith("/v3/api-docs") ||
                 path.startsWith("/swagger-ui") ||
                 path.startsWith("/swagger-resources") ||

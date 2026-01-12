@@ -1,10 +1,7 @@
 package com.example.friendfinder.service.imp;
 
 import com.example.friendfinder.config.JwtHandler;
-import com.example.friendfinder.controller.vm.LoginReq;
-import com.example.friendfinder.controller.vm.LoginRes;
-import com.example.friendfinder.controller.vm.RegisterReq;
-import com.example.friendfinder.controller.vm.RegisterRes;
+import com.example.friendfinder.controller.vm.*;
 import com.example.friendfinder.dto.UserDto;
 import com.example.friendfinder.mapper.UserMapper;
 import com.example.friendfinder.model.Role;
@@ -39,7 +36,7 @@ public class AuthServiceImp implements AuthService {
     }
     @Override
     @Transactional
-    public ResponseEntity<LoginRes> login(LoginReq loginReq) {
+    public ResponseEntity<?> login(LoginReq loginReq) {
         User user = userRepo.findByUsername(loginReq.getUsername());
         if (user != null && passwordEncoder.matches(loginReq.getPassword(), user.getPassword())) {
             String token = jwtHandler.generateJwtToken(user);
@@ -47,7 +44,7 @@ public class AuthServiceImp implements AuthService {
             LoginRes loginRes = new LoginRes(token,userDto,"login is success");
             return ResponseEntity.ok(loginRes);
         }
-        return ResponseEntity.status(401).build();
+        return ResponseEntity.status(401).body(new ErrorResponse("Invalid username or password",401));
     }
 
     @Override

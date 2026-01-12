@@ -24,6 +24,7 @@ public class RegisterReq {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
     private String bio;
+
     private String profileImagePath;
     private List<Long> roleIds;
 

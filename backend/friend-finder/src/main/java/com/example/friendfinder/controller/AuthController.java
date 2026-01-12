@@ -1,9 +1,6 @@
 package com.example.friendfinder.controller;
 
-import com.example.friendfinder.controller.vm.LoginReq;
-import com.example.friendfinder.controller.vm.LoginRes;
-import com.example.friendfinder.controller.vm.RegisterReq;
-import com.example.friendfinder.controller.vm.RegisterRes;
+import com.example.friendfinder.controller.vm.*;
 import com.example.friendfinder.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +21,13 @@ public class AuthController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<LoginRes> login(@Valid @RequestBody LoginReq loginReq) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginReq loginReq) {
         return authService.login(loginReq);
     }
     @PostMapping("/register")
-    public ResponseEntity<RegisterRes> register(@Valid @RequestBody RegisterReq registerReq) {
+    public ResponseEntity<RegisterRes> register(@Valid @RequestBody RegisterReq registerReq
+    ) {
         return authService.register(registerReq);
 
     }

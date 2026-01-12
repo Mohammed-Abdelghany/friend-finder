@@ -9,7 +9,7 @@ import com.example.friendfinder.model.User;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-   ResponseEntity<LoginRes> login(LoginReq loginReq);
+   ResponseEntity<?> login(LoginReq loginReq);
     UserDto loginWithEmail(String email, String password);
 
     ResponseEntity<RegisterRes> register(RegisterReq user);
