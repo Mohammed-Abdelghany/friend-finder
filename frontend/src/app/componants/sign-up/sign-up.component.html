@@ -25,6 +25,8 @@
             <input type="text" class="form-control" id="example-bio" placeholder="Enter a bio" [(ngModel)]="bio" name="bio">
           </fieldset>
           <fieldset class="form-group">
+            <label for="example-ww">Select Profile Image</label>
+
             <input
               type="file"
               class="form-control"
@@ -33,6 +35,18 @@
               name="img"
               accept="image/*"
             />          </fieldset>
+
+          <fieldset class="form-group">
+            <label for="coverImg">Select Cover Image</label>
+            <input
+              type="file"
+              class="form-control"
+              id="coverImg"
+              (change)="onCoverSelected($event)"
+              name="coverImg"
+              accept="image/*"
+            />
+          </fieldset>
 <!--          <img-->
 <!--            *ngIf="imgFile"-->
 <!--            [src]="imgFile"-->

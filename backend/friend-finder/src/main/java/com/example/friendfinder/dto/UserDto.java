@@ -18,6 +18,7 @@ public class UserDto {
     private String email;
     private String password;
     private String profileImagePath;
+    private String profileCoverPath;
     private String bio;
     private Date CreatedAt;
     private Boolean Status;

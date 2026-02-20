@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule, Pipe} from '@angular/core';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './componants/header/header.component';
 import { FooterComponent } from './componants/footer/footer.component';
@@ -26,8 +26,10 @@ import {FormsModule} from '@angular/forms';
 import {AuthGuard} from '../services/guard/auth.guard';
 import {AuthInterceptor} from '../services/interceptor/auth.interceptor';
 import {GuestGuard} from '../services/guard/guest.guard';
-import {CommonModule, NgIf} from '@angular/common';
+import {CommonModule, DatePipe, NgIf} from '@angular/common';
 import { FeaturesComponent } from './componants/login/features/features.component';
+import {MomentModule} from 'ngx-moment';
+
 
 
 // http://localhost:4200
@@ -42,6 +44,7 @@ const routes: Routes = [
   {path: 'timeline-about', component: TimeAboutComponent, canActivate: [AuthGuard]},
   {path: 'timeline-friends', component: TimeFriendsComponent, canActivate: [AuthGuard]},
   {path: 'timeline-album', component: TimeAlbumComponent, canActivate: [AuthGuard]},
+  {path: 'timeline-detailes', component: TimeLineDetailesComponent, canActivate: [AuthGuard]},
   {path: '', component: MainPageComponent, canActivate: [AuthGuard]},
   {path: '**', component: MainPageComponent, canActivate: [AuthGuard]},
 ];
@@ -70,6 +73,7 @@ const routes: Routes = [
     LoginComponent,
     FeaturesComponent,
 
+
   ],
   imports: [
     BrowserModule,
@@ -77,6 +81,10 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     CommonModule,
+    MomentModule,
+
+
+
   ],
   providers: [  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 

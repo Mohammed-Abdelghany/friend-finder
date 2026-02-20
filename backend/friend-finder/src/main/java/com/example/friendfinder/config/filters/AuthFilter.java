@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,38 +33,54 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
     @Override
+
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("Authorization");
+                                    @NonNull FilterChain filterChain)
+            throws ServletException, IOException {
 
-        if (token == null || !token.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Missing or invalid Authorization header");
-            return;
+        try {
+            String header = request.getHeader("Authorization");
+
+            if (header == null || !header.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = header.substring(7);
+            var userDto = jwtHandler.validateJwtToken(token);
+
+            if (userDto != null &&
+                    SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                // ⚠ DB hit هنا
+                List<Role> dbRoles = roleRepo.findAllById(userDto.getRolesIds());
+
+                var authorities = dbRoles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                        .toList();
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userDto,
+                                null,
+                                authorities
+                        );
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+        } catch (Exception ex) {
+            SecurityContextHolder.clearContext();
         }
 
-        token = token.substring(7);
-        var userDto = jwtHandler.validateJwtToken(token);
-
-        if (userDto == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token");
-            return;
-        }
-        List<Role> dbRoles = roleRepo.findAllById(userDto.getRolesIds());
-
-
-        List<SimpleGrantedAuthority> roles = dbRoles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .toList();
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userDto, null, roles);
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
     }
+
 
 
     @Override

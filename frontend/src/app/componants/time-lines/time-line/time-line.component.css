@@ -1,0 +1,83 @@
+.pagination-container {
+  display: flex;          /* نخليها فليكس */
+  justify-content: center; /* نركزهم أفقياً */
+  margin-top: 20px;       /* شوية مسافة فوق */
+}
+
+.pagination-container button {
+  margin: 0 3px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.pagination-container button.active {
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+}
+
+.post-container {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  flex-wrap: wrap; /* لو الشاشة ضيقة، الصورة والنص ينزلوا تحت بعض */
+  align-items: flex-start;
+}
+
+.post-container img.profile-photo-md {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.post-detail {
+  flex: 1;
+  min-width: 200px; /* يمنع النص يصغر جدا */
+}
+
+.post-detail .post-user {
+  font-weight: bold;
+  white-space: nowrap; /* يمنع الاسم ينزل سطرين */
+  overflow: hidden;
+  text-overflow: ellipsis; /* يحط ... لو الاسم طويل */
+}
+
+.post-detail .post-date {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.post-text {
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+.post-image {
+  width: 100%;
+  max-width: 500px; /* تمنع الصورة تكبر جدًا */
+  height: auto;
+  border-radius: 12px;
+  margin-top: 10px; /* مسافة بين النص والصورة */
+}
+.post-date {
+  text-align: left; /* يخلي كل اللي جوا على الشمال */
+}
+.post-username {
+  font-weight: bold;
+  white-space: nowrap;       /* يمنع الاسم ينزل سطرين */
+  overflow: hidden;
+  text-overflow: ellipsis;   /* يحط ... لو الاسم طويل */
+  margin: 0;
+  text-align: left;          /* خلي الاسم على الشمال */
+}
+
+.post-created {
+  font-size: 12px;
+  color: #888;
+  margin: 2px 0 0 0;         /* مسافة صغيرة فوق تحت */
+  text-align: left;          /* خلي التاريخ على الشمال */
+}

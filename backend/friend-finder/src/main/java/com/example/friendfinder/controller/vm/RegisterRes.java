@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class RegisterRes {
     private String message;
+    private Long id;       // معرف المستخدم الجديد
+
 
 
 }

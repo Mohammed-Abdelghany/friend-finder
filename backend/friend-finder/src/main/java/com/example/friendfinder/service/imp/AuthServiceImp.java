@@ -57,12 +57,12 @@ public class AuthServiceImp implements AuthService {
 
         if (userRepo.existsByUsername(registerReq.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new RegisterRes("Username already exists"));
+                    .body(new RegisterRes("Username already exists",null));
         }
 
         if (userRepo.existsByEmail(registerReq.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new RegisterRes("Email already exists"));
+                    .body(new RegisterRes("Email already exists",null));
         }
 
         Role userRole = roleRepo.findByName("USER").orElseGet(() -> {
@@ -76,14 +76,15 @@ public class AuthServiceImp implements AuthService {
         newUser.setEmail(registerReq.getEmail());
         newUser.setPassword(passwordEncoder.encode(registerReq.getPassword()));
         newUser.setBio(registerReq.getBio());
-        newUser.setProfileImagePath(registerReq.getProfileImagePath());
+//        newUser.setProfileImagePath(registerReq.getProfileImagePath());
+//        newUser.setProfileCoverPath(registerReq.getProfileCoverPath());
         newUser.setRoles(List.of(userRole));
         newUser.setStatus(true);
         newUser.setCreatedAt(new Date());
-        userRepo.save(newUser);
+       User saverdUser= userRepo.save(newUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new RegisterRes("User registered successfully"));
+                .body(new RegisterRes("User registered successfully",saverdUser.getId()));
 
     }
 

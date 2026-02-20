@@ -19,11 +19,10 @@ public class User {
     private String username;
     @Column(nullable = false,unique = true)
     private String email;
-
     @Column(nullable = false)
-
     private String password;
     private String profileImagePath;
+    private String profileCoverPath;
     private String bio;
     @Column(nullable = false)
     private Date CreatedAt;

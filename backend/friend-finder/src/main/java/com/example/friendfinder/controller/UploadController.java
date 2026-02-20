@@ -3,6 +3,8 @@ package com.example.friendfinder.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("auth/upload")
+
 public class UploadController {
 
 
@@ -27,6 +30,7 @@ public class UploadController {
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
         String uploadDirectory="src/main/resources/static/assets/uploads/";
         try {
@@ -98,4 +102,17 @@ public class UploadController {
         }
         return filename.substring(lastDotIndex + 1);
     }
+    @PostMapping("/delete")
+    public ResponseEntity<Map<String, String>> deleteImage(@RequestParam String filename) {
+        Path uploadDirectory = Paths.get("src/main/resources/static/assets/uploads/").toAbsolutePath().normalize();
+        Path filePath = uploadDirectory.resolve(filename).normalize();
+        try {
+            Files.deleteIfExists(filePath);
+            return ResponseEntity.ok(Map.of("message", "File deleted successfully"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to delete file"));
+        }
+    }
+
 }

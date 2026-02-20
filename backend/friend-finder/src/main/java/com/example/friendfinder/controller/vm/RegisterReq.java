@@ -26,6 +26,7 @@ public class RegisterReq {
     private String bio;
 
     private String profileImagePath;
+    private String profileCoverPath;
     private List<Long> roleIds;
 
 }
