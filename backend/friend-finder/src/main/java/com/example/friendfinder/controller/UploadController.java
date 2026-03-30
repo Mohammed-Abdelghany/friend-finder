@@ -67,9 +67,7 @@ public class UploadController {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-
-            // Generate unique filename
-            String uniqueFilename = UUID.randomUUID().toString() + "." + extension;
+            String uniqueFilename = UUID.randomUUID() + "." + extension;
             Path filePath = uploadPath.resolve(uniqueFilename).normalize();
 
             // Security check: ensure file is within upload directory

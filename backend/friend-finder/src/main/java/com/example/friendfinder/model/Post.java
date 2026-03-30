@@ -19,7 +19,10 @@ public class Post {
     private Long id;
     private String Content;
     private String mediaPath;
-    private Date CreatedAt;
+    private Date createdAt;
+    private Integer likes;
+    private Integer comments;
+    private Integer unlikes;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 }

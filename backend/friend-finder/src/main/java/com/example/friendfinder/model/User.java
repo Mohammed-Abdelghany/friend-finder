@@ -2,6 +2,7 @@ package com.example.friendfinder.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,7 +33,7 @@ public class User {
     private Boolean Status;
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private List<Role> roles;
 
 }

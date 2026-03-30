@@ -15,8 +15,6 @@ export class SignUpComponent implements OnInit {
   email = '';
   password = '';
   bio = '';
-  profileImagePath = '';
-  profileCoverPath = '';
 
   imgFile: File | null = null;
   coverFile: File | null = null;
@@ -40,58 +38,25 @@ export class SignUpComponent implements OnInit {
   }
 
   uploadAndRegister(): void {
-    // Step 1: register user first
-    this.authService.register({
+    if (!this.imgFile || !this.coverFile) {
+      Swal.fire('Error', 'Please select both profile and cover images', 'error');
+      return;
+    }
+
+    const userData = {
       username: this.username,
       email: this.email,
       password: this.password,
-      bio: this.bio,
-      profileImagePath: '',
-      profileCoverPath: ''
-    }).subscribe({
+      bio: this.bio
+    };
+
+    this.authService.register(userData, this.imgFile, this.coverFile).subscribe({
       next: (user: any) => {
         if (!user?.id) {
           Swal.fire('Error', 'User ID not returned from server', 'error');
           return;
         }
-
-        const uploadRequests = [];
-
-        // Step 2: Upload profile image if exists
-        if (this.imgFile) {
-          uploadRequests.push(
-            this.authService.uploadImage(this.imgFile).pipe(catchError(() => of(null)))
-          );
-        } else {
-          uploadRequests.push(of(null));
-        }
-
-        // Step 3: Upload cover image if exists
-        if (this.coverFile) {
-          uploadRequests.push(
-            this.authService.uploadImage(this.coverFile).pipe(catchError(() => of(null)))
-          );
-        } else {
-          uploadRequests.push(of(null));
-        }
-
-        // Step 4: Wait for uploads and then update user record
-        forkJoin(uploadRequests).subscribe((results: any[]) => {
-          const updatedData: any = {};
-          if (results[0]?.url) { updatedData.profileImagePath = results[0].url; }
-          if (results[1]?.url) { updatedData.profileCoverPath = results[1].url; }
-
-          // Only update if there's something to update
-          if (Object.keys(updatedData).length === 0) {
-            this.showSuccessAndNavigate();
-            return;
-          }
-
-          this.authService.updateUser(user.id, updatedData).subscribe({
-            next: () => this.showSuccessAndNavigate(),
-            error: () => Swal.fire('Error', 'Failed to update user images', 'error')
-          });
-        });
+        this.showSuccessAndNavigate();
       },
       error: (err) => {
         Swal.fire({

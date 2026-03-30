@@ -7,6 +7,7 @@ import com.example.friendfinder.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 
@@ -16,20 +17,23 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public Page<PostDto> getPosts(@RequestParam int page, @RequestParam int size) {
+    public Page<PostDto> getPosts(@RequestParam(defaultValue  ="1") int page, @RequestParam(defaultValue  ="10") int size) {
+
         return postService.getPosts(page, size);
     }
     @PostMapping
-    public PostDto createPost(@RequestBody CreatePostRequest request) {
-        return postService.createPost(request.getContent(), request.getMediaPath());
+    public PostDto createPost(@RequestPart("data") CreatePostRequest request,
+                              @RequestPart(value = "file",required = false) MultipartFile file) {
+
+        return postService.createPost(request.getContent(), file);
     }
 
      public void deletePost(Long postId) {
         postService.deletePost(postId);
     }
 
-     public void updatePost(Long postId, String content, String mediaPath) {
-        postService.updatePost(postId, content, mediaPath);
+     public void updatePost(Long postId, String content, MultipartFile file) {
+        postService.updatePost(postId, content, file);
     }
 }
 

@@ -56,7 +56,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 // ⚠ DB hit هنا
                 List<Role> dbRoles = roleRepo.findAllById(userDto.getRolesIds());
 
-                var authorities = dbRoles.stream()
+                List<SimpleGrantedAuthority> authorities = dbRoles.stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                         .toList();
 

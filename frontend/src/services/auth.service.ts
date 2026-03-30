@@ -25,18 +25,28 @@ export class AuthService {
   }
 
   // tslint:disable-next-line:max-line-length
-  register(data: { username: string; email: string; password: string; bio: string; profileImagePath: string; profileCoverPath: string }): Observable<any> {
-    this.isValid = this.validateInputs(data.username, data.email, data.password);
-    if (!this.isValid.valid) {
-      throw new Error(this.isValid.message);
-    }
-    return this.http.post<any>(this.baseUrl + '/register', data);
+  register(
+    data: { username: string; email: string; password: string; bio: string },
+    profileImage: File,
+    coverImage: File
+  ): Observable<any> {
+    const formData = new FormData();
+    const dataBlob = new Blob([JSON.stringify(data)], {
+      type: 'application/json'
+    });
+    // حط الـ JSON كـ string في الجزء المسمى "data"
+    formData.append('data', dataBlob);
+
+    // حط الملفات
+    formData.append('profileImage', profileImage);
+    formData.append('coverImage', coverImage);
+
+    // ابعت الريكوست
+    return this.http.post(`${this.baseUrl}/register`, formData);
   }
 
   // 🔹 إضافة updateUser لتحديث روابط الصور بعد التسجيل
-  updateUser(userId: number, data: { profileImagePath?: string; profileCoverPath?: string }): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update/${userId}`, data);
-  }
+
 
   logout(): void {
     localStorage.removeItem('token');
@@ -69,12 +79,5 @@ export class AuthService {
     return { valid: true };
   }
 
-  uploadImage(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post<{ url: string }>(
-      `${this.baseUrl}/upload`,
-      formData
-    );
-  }
+
 }

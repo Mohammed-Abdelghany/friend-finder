@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreatePostRequest {
     private String content;
-    private String mediaPath;
 }

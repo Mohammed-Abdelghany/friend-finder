@@ -7,11 +7,12 @@ import com.example.friendfinder.controller.vm.RegisterRes;
 import com.example.friendfinder.dto.UserDto;
 import com.example.friendfinder.model.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
    ResponseEntity<?> login(LoginReq loginReq);
     UserDto loginWithEmail(String email, String password);
 
-    ResponseEntity<RegisterRes> register(RegisterReq user);
+    ResponseEntity<RegisterRes> register(RegisterReq user, MultipartFile profileImage,MultipartFile coverImage);
 
 }

@@ -9,7 +9,7 @@
 
         <div class="col-md-7">
 
-          <app-publish></app-publish>
+          <app-publish (postCreated)="loadPosts()"></app-publish>
 
           <!-- Empty State -->
           <div *ngIf="posts.length === 0">
@@ -25,7 +25,7 @@
               <p class="text-muted">{{ post.CreatedAt | date:'short' }}</p>
             </div>
 
-            <img [src]="srcImg + post.mediaPath" alt="post-image" class="post-image">
+            <img *ngIf="post.mediaPath" [src]="srcImg + post.mediaPath" alt="post-image" class="post-image">
 
             <div class="post-container">
               <img [src]="srcImg + user.profileImagePath" alt="user" class="profile-photo-md">

@@ -9,12 +9,23 @@ import {Page} from '../app/model/page';
   providedIn: 'root'
 })
 export class PostService {
-
-  constructor(private http: HttpClient) { }
+  private apiUrl = 'http://localhost:9090/api/posts';
+  constructor(private http: HttpClient) {
+  }
 
   getPosts(page: number, size: number): Observable<Page<PostModel>> {
     return this.http.get<Page<PostModel>>(
       `http://localhost:9090/api/posts?page=${page}&size=${size}`
     );
   }
-}
+
+  createPost(content: string, file?: File): Observable<PostModel> {
+    const formData = new FormData();
+    formData.append('data', new Blob([JSON.stringify({ content })], { type: 'application/json' }));
+    if(file) {
+      formData.append('file', file);
+    }
+
+    return this.http.post<PostModel>(this.apiUrl, formData);
+  }
+  }

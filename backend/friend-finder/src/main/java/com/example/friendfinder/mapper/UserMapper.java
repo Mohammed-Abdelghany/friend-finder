@@ -20,7 +20,7 @@ public interface UserMapper {
         if (roles == null) return List.of();
         return roles.stream()
                 .map(Role::getId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());  
     }
 //
 //    default List<Long> mapPostsToIds(List<?> posts) {

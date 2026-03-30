@@ -3,6 +3,8 @@ package com.example.friendfinder.service.imp;
 import com.example.friendfinder.config.JwtHandler;
 import com.example.friendfinder.controller.vm.*;
 import com.example.friendfinder.dto.UserDto;
+import com.example.friendfinder.helper.FileType;
+import com.example.friendfinder.helper.UploadHelper;
 import com.example.friendfinder.mapper.UserMapper;
 import com.example.friendfinder.model.Role;
 import com.example.friendfinder.model.User;
@@ -15,9 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuthServiceImp implements AuthService {
@@ -53,7 +60,7 @@ public class AuthServiceImp implements AuthService {
     }
     @Override
     @Transactional
-    public ResponseEntity<RegisterRes> register(RegisterReq registerReq) {
+    public ResponseEntity<RegisterRes> register(RegisterReq registerReq, MultipartFile profileImage,MultipartFile coverImage) {
 
         if (userRepo.existsByUsername(registerReq.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -76,15 +83,44 @@ public class AuthServiceImp implements AuthService {
         newUser.setEmail(registerReq.getEmail());
         newUser.setPassword(passwordEncoder.encode(registerReq.getPassword()));
         newUser.setBio(registerReq.getBio());
-//        newUser.setProfileImagePath(registerReq.getProfileImagePath());
-//        newUser.setProfileCoverPath(registerReq.getProfileCoverPath());
+//
         newUser.setRoles(List.of(userRole));
         newUser.setStatus(true);
         newUser.setCreatedAt(new Date());
-       User saverdUser= userRepo.save(newUser);
+
+        Map<String, String> profileImageResult = new HashMap<>();
+        Map<String, String> profileCoverResult = new HashMap<>();
+        if (profileImage != null) {
+
+
+        try {
+            profileImageResult=(UploadHelper.uploadFile(profileImage, FileType.IMAGE));
+        }
+        catch (IOException e) {
+           e.printStackTrace();
+        }
+        }
+        if (coverImage != null) {
+
+
+        try {
+            profileCoverResult=(UploadHelper.uploadFile(coverImage,FileType.IMAGE));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        }
+        if (profileImageResult.get("url")!=null) {
+            newUser.setProfileImagePath(profileImageResult.get("url"));
+        }
+        if (profileCoverResult.get("url")!=null) {
+            newUser.setProfileCoverPath(profileCoverResult.get("url"));
+        }
+
+        User savedUser= userRepo.save(newUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new RegisterRes("User registered successfully",saverdUser.getId()));
+                .body(new RegisterRes("User registered successfully",savedUser.getId()));
 
     }
 

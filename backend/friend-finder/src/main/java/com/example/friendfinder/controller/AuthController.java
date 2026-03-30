@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Optional;
@@ -30,25 +31,28 @@ public class AuthController {
         return authService.login(loginReq);
     }
     @PostMapping("/register")
-    public ResponseEntity<RegisterRes> register(@Valid @RequestBody RegisterReq registerReq
-    ) {
-        return authService.register(registerReq);
+    public ResponseEntity<RegisterRes> register(@Valid   @RequestPart("data") RegisterReq req,
+                                                @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+                                              @RequestPart(value = "profileImage", required = false)MultipartFile coverImage
+    )
+     {
+        return authService.register(req,profileImage,coverImage);
 
     }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> updates) {
-        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        if (updates.containsKey("profileImagePath")) {
-            user.setProfileImagePath(updates.get("profileImagePath"));
-        }
-        if (updates.containsKey("profileCoverPath")) {
-            user.setProfileCoverPath(updates.get("profileCoverPath"));
-        }
-        userRepo.save(user);
-        return ResponseEntity.ok(user);
-    }
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<User> updateUser(
+//            @PathVariable Long id,
+//            @RequestBody Map<String, String> updates) {
+//        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+//        if (updates.containsKey("profileImagePath")) {
+//            user.setProfileImagePath(updates.get("profileImagePath"));
+//        }
+//        if (updates.containsKey("profileCoverPath")) {
+//            user.setProfileCoverPath(updates.get("profileCoverPath"));
+//        }
+//        userRepo.save(user);
+//        return ResponseEntity.ok(user);
+//    }
 
 
 

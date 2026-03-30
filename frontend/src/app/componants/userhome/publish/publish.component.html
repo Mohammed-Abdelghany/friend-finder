@@ -6,18 +6,33 @@
     <div class="col-md-7 col-sm-7">
       <div class="form-group">
         <img [src]="srcImg+user.profileImagePath" alt="" class="profile-photo-md" />
-        <textarea name="texts" id="exampleTextarea" cols="30" rows="1" class="form-control" placeholder="Write what you wish"></textarea>
+        <textarea [(ngModel)]="postContent" name="texts" id="exampleTextarea" cols="30" rows="1"
+                  class="form-control" placeholder="Write what you wish"></textarea>
       </div>
     </div>
-    <div class="col-md-5 col-sm-5">
+    <div class="col-md-4 col-sm-4">
       <div class="tools">
         <ul class="publishing-tools list-inline">
-          <li><a href="#"><i class="ion-compose"></i></a></li>
-          <li><a href="#"><i class="ion-images"></i></a></li>
-          <li><a href="#"><i class="ion-ios-videocam"></i></a></li>
-          <li><a href="#"><i class="ion-map"></i></a></li>
+          <!-- أيقونة الصور -->
+          <li>
+            <i class="ion-images" style="cursor:pointer;" (click)="triggerFile('image')"></i>
+            <input type="file" #imageInput (change)="onFileSelected($event, 'image')" style="display:none;" accept="image/*"
+            />
+
+          </li>
+
+          <!-- أيقونة الفيديو -->
+          <li>
+            <i class="ion-ios-videocam" style="cursor:pointer;" (click)="triggerFile('video')"></i>
+            <input type="file" #videoInput (change)="onFileSelected($event, 'video')" style="display:none;" accept="video/*" />
+
+          </li>
+
         </ul>
-        <button class="btn btn-primary pull-right">Publish</button>
+        <span *ngIf="fileType === 'video' && fileName" class="file-name">{{ fileName }}</span>
+        <span *ngIf="fileType === 'image' && fileName" class="file-name">{{ fileName }}</span>
+
+        <button (click)="submitPost()" class="btn btn-primary pull-right">Publish</button>
       </div>
     </div>
   </div>
